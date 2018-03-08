@@ -60,6 +60,9 @@ func NewOutput(seq, a int, prefix string) (*os.File, int) {
 		suffix = append([]byte{letters[d]},
 			suffix...)
 	}
+	if s > 0 {
+		log.Fatal("ran out of possible suffixes\n")
+	}
 	name := fmt.Sprintf("%s%s", prefix, suffix)
 	out, err := os.OpenFile(name,
 		os.O_RDWR|os.O_CREATE, 0777)
