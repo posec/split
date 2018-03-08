@@ -7,11 +7,13 @@ import (
 	"io"
 	"log"
 	"os"
+	"strconv"
 )
 
 func main() {
 	lp := flag.Int("l", 1000, "segment length")
 	ap := flag.Int("a", 2, "suffix length")
+	bp := flag.String("b", "", "split by bytes")
 	in := os.Stdin
 
 	flag.Parse()
@@ -28,7 +30,11 @@ func main() {
 		prefix = args[1]
 	}
 
-	splitLine(in, *lp, *ap, prefix)
+	if *bp == "" {
+		splitLine(in, *lp, *ap, prefix)
+	} else {
+		splitBytes(in, *bp, *ap, prefix)
+	}
 
 	os.Exit(0)
 }
@@ -60,6 +66,40 @@ func splitLine(inio io.Reader, n, a int, prefix string) {
 
 	return
 
+}
+
+func splitBytes(in io.Reader, b string, a int, prefix string) {
+	seq := 0
+	factor := 1
+	if b[len(b)-1] == 'k' {
+		b = b[:len(b)-1]
+		factor = 1000
+	}
+	if b[len(b)-1] == 'm' {
+		b = b[:len(b)-1]
+		factor = 1000000
+	}
+	l, err := strconv.Atoi(b)
+	if err != nil {
+		log.Fatal(err)
+	}
+	l *= factor
+	buf := make([]byte, l)
+
+	for {
+		n, err := in.Read(buf)
+		if n > 0 {
+			var out *os.File
+			out, seq = NewOutput(seq, a, prefix)
+			out.Write(buf[:n])
+		}
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
 
 const letters = "abcdefghijklmnopqrstuvwxyz"
