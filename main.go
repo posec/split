@@ -78,7 +78,7 @@ func NewOutput(seq, a int, prefix string) (*os.File, int) {
 	}
 	name := fmt.Sprintf("%s%s", prefix, suffix)
 	out, err := os.OpenFile(name,
-		os.O_RDWR|os.O_CREATE, 0777)
+		os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0777)
 	if err != nil {
 		log.Fatal(err)
 	}
