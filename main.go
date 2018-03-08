@@ -12,10 +12,19 @@ import (
 func main() {
 	lp := flag.Int("l", 1000, "segment length")
 	ap := flag.Int("a", 2, "suffix length")
+	in := os.Stdin
 
 	flag.Parse()
+	args := flag.Args()
+	if len(args) > 0 {
+		var err error
+		in, err = os.Open(args[0])
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 
-	splitLine(os.Stdin, *lp, *ap, "x")
+	splitLine(in, *lp, *ap, "x")
 
 	os.Exit(0)
 }
