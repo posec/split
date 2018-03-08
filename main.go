@@ -23,8 +23,12 @@ func main() {
 			log.Fatal(err)
 		}
 	}
+	prefix := "x"
+	if len(args) > 1 {
+		prefix = args[1]
+	}
 
-	splitLine(in, *lp, *ap, "x")
+	splitLine(in, *lp, *ap, prefix)
 
 	os.Exit(0)
 }
