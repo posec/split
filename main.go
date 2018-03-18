@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	lp := flag.Int("l", 1000, "segment length")
+	lp := flag.Int("l", 1000, "split by lines")
 	ap := flag.Int("a", 2, "suffix length")
 	bp := flag.String("b", "", "split by bytes")
 	in := os.Stdin
